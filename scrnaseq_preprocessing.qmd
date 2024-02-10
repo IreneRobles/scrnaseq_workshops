@@ -1,0 +1,242 @@
+---
+title: "Introduction to scRNAseq analysis"
+subtitle: "Workshop"
+author: Irene Robles
+institute: CoSyne Therapeutics
+date: today
+bibliography: bibliograpy.bib
+format: 
+    html:
+        scrollable: true
+        incremental: false
+        theme: default
+        toc: true
+        code-fold: false
+        embed-resources: true
+fontsize: 12pt
+jupyter: myscanpy
+---
+
+## Introduction
+
+## Who am I?
+
+## Where do I work?
+
+## What do I do?
+
+## Bulk sequencing data
+
+- 1953 - DNA structure
+- 1953 - First protein amino acid sequencing
+- 1975 - Sanger sequencing
+- 1985 - First PCR
+- 1988 - PCR with Taq polymerase
+- 1988 - Automation of Sanger sequencing
+- 1993 - First qPCRs
+- 1996 - Pyrosequencing
+- 1995 - Microarrays
+    - Quantify gene expression using a chip
+- 2001 - First draft of the human genome
+- 2003 - First NGS DNA sequencer
+- 2005 - Next-generation sequencing
+- 2009 - First single-cell RNA-seq [@tang2009mrna]
+- 2010 - RNA-seq
+- 2013 - Single-cell RNA-seq is declared method of the year
+
+[@zhu2020pcr; @gondane2023revealing]
+
+## Bulk RNA-seq
+
+- RNA-seq is a method to quantify gene expression in a sample by sequencing the RNA molecules in the sample.
+- Can be used to quantify gene expression, identify alternative splicing, identify novel genes, quantify allele-specific expression, etc.
+- Can estimate the **average expression** level for each gene across a population of cells.
+
+## Single-cell RNA-seq
+
+- scRNA-seq methods can quantify gene expression in individual cells.
+- Can be used to study cell  heterogeneity, sunch as identify cell types, cell states, heterogeneity, and cell-cell interactions.
+- Suffers from drop-out, higher technical noise and lower genomic resolution compared to bulk RNA-seq.
+
+## Sample representation
+
+- In bulk data, each sample is repressented by a vector, where each value is a gene.
+- In single cell data, each sample is a matrix, where each row is a gene and each column is a cell.
+
+\begin{align}
+Bulk &= \begin{bmatrix} gene_{1} \\ gene_{2} \\ gene_{3}\\ \vdots \\ gene_{n} \end{bmatrix} 
+\\
+\\
+
+Single-cell &= \begin{bmatrix}
+    gene_1, cell_1 & gene_1, cell_2 & gene_1, cell_3 & \dots  & gene_1, cell_m \\
+    gene_2, cell_1 & gene_2, cell_2 & gene_2, cell_3 & \dots  & gene_2, cell_m \\
+    gene_3, cell_1 & gene_3, cell_2 & gene_3, cell_3 & \dots  & gene_3, cell_m \\
+    \vdots & \vdots & \vdots & \ddots & \vdots \\
+    gene_n, cell_1 & gene_n, cell_2 & gene_n, cell_3 & \dots  & gene_n, cell_m
+\end{bmatrix}
+
+\end{align}
+
+
+
+
+
+## Single-cell vs bulk RNAseq
+
+|Feature              | Bulk data                          | Single-cell data                  |
+|---------------------|------------------------------------|-----------------------------------|
+| Cell resolution     | Average of all cells               | Individual cell resolution        |
+| Sample representation | Vector of gene expression values | Matrix of gene expression values  |
+| Genomic resolution  | Higher, depends on sequencing depth  | Lower, depends on starting material |
+| Cost                | Lower                                | High                              |
+| Computational requirements | Lower                        | Higher                              |
+| Data size           | Lower                               | Higher                           |
+| Data interpretation | Simple                             | Complex                           |
+
+## Scanpy vs Seurat
+
+- Scanpy is a Python package for single-cell analysis.
+- Seurat is an R package for single-cell analysis.
+- Both are widely used and have similar functionality.
+- Scanpy is more flexible and has a more active development community.
+- Seurat is more user-friendly and has more tutorials and documentation.
+
+## Scale of scRNAseq data
+
+![Number of cells per study over years    [@svensson2020curated]](number_of_cells.png)
+
+## AnnData object
+
+![AnnData object](https://falexwolf.de/img/scanpy/anndata.svg) 
+
+## Set up
+
+- Install Miniconda
+- Create a new environment
+```bash
+conda create -n myscanpy python=3.10
+conda activate myscanpy
+pip install -r requirements.txt
+python -m ipykernel install --user --name myscanpy --display-name "Python (myscanpy)"
+quarto check jupyter
+
+```
+
+## Import libraries
+
+```{python}
+import scanpy as sc
+import scipy as sp
+import numpy as np
+import pandas as pd
+import polars as pl
+import matplotlib.pyplot as plt
+import seaborn as sns
+import fast_matrix_market
+```
+
+Scanpy setttings
+```{python}
+sc.settings.verbosity = 3   # verbosity: errors (0), warnings (1), info (2), hints (3)
+sc.logging.print_header()
+sc.settings.set_figure_params(dpi=80, facecolor='white')
+```
+
+## Download data
+
+```bash
+wget https://ndownloader.figshare.com/files/10038325
+unzip 10038325
+wget https://ndownloader.figshare.com/files/10038328
+mv 10038328 droplet_metadata.csv
+wget https://ndownloader.figshare.com/files/10039264
+mv 10039264 droplet_annotation.csv
+```
+
+
+## Load data
+
+```{python}
+adata = sc.datasets.pbmc3k()
+# Reengineering the data
+adata
+```
+
+
+> Hint: When single-cell datasets are large, you can use `polars` instead of `pandas` to read tabular data. You can also use `fast_matrix_market` to read mtx files.
+
+```{python}
+#| code-fold: true
+
+def read_scrnaseq_from_mtx_and_csv(
+    mtx_file: str, 
+    gene_info: str, 
+    cell_metadata: str)-> sc.AnnData:
+    """
+    Read a sparse matrix in Matrix Market format and two CSV files with gene and cell metadata
+    into an AnnData object.
+
+    Parameters
+    ----------
+    mtx_file : str
+        Path to the Matrix Market file with the sparse matrix.
+    gene_info : str
+        Path to the CSV file with gene metadata.
+    cell_metadata : str
+        Path to the CSV file with cell metadata.
+    """
+    # Read the .mtx file into a sparse matrix using the fast_matrix_market package (master than scanpy, uses multiprocessing)
+    mtx = fast_matrix_market.mmread(mtx_file)
+
+    # Convert the sparse matrix to a CSR matrix
+    # Otherwise you will not be able to use it with scanpy
+    if isinstance(mtx, sp.sparse.coo.coo_matrix):
+        mtx = mtx.tocsr()
+    
+    # Create an AnnData object
+    data = sc.AnnData(X=mtx)
+
+    # Polars is faster than pandas for reading test files
+    # Read the gene names and cell names into the AnnData object
+    adata.var = pl.read_csv(gene_info).to_pandas()
+    # Read the cell names and cell metadata into the AnnData object
+    adata.obs = pl.read_csv(cell_metadata).to_panda()
+    return adata
+```
+
+
+# Count scrnaseq_workshop_March2024.html
+mtx = fast_matrix_market.mmread(mtx_file)
+
+if isinstance(mtx, sp.sparse.coo.coo_matrix):
+    mtx = mtx.tocsr()
+
+data = sc.AnnData(X=mtx)
+
+# Read feature names (genes)
+adata.var = pl.read_csv(gene_info).to_pandas()
+adata.obs = pl.read_csv(cell_metadata).to_panda()
+adata
+```
+
+
+## What is the goal of this workshop?
+
+## What is single-cell data?
+
+What is single-cell RNA-seq and how does it compare to bulk RNA-seq?
+What are some of the typical applications of scRNA-seq?
+How are samples typically prepared for scRNA-seq?
+What are the differences between some of the most popular protocols and what are their advantages and disadvantages?
+What experimental design choices should be considered in scRNA-seq?
+What are some of the challenges of scRNA-seq data compared to bulk data?
+
+
+
+
+## Resources
+
+- [Analysis of single cell RNA-seq data](https://www.singlecellcourse.org/)
+    - Course from University of Cambridge Bioinformatics training unit
+- [Single cell study database](www.nxn.se/single-cell-studies/)
