@@ -108,7 +108,7 @@ Single-cell &= \begin{bmatrix}
 
 ## AnnData object
 
-![AnnData object](https://falexwolf.de/img/scanpy/anndata.svg) 
+![AnnData object, source: scanpy web](https://falexwolf.de/img/scanpy/anndata.svg) 
 
 ## Set up
 
@@ -157,9 +157,11 @@ mv 10039264 droplet_annotation.csv
 
 ## Load data
 
+Load 1 dataset
+
 ```{python}
-adata = sc.datasets.pbmc3k()
-# Reengineering the data
+path = "droplet/Bladder-10X_P4_3/"
+adata = sc.read_10x_mtx(path, var_names='gene_symbols', cache=True)
 adata
 ```
 
@@ -169,23 +171,24 @@ adata
 ```{python}
 #| code-fold: true
 
-def read_scrnaseq_from_mtx_and_csv(
-    mtx_file: str, 
-    gene_info: str, 
-    cell_metadata: str)-> sc.AnnData:
+def read_scrnaseq_faster(
+   path: str
+   )-> sc.AnnData:
     """
     Read a sparse matrix in Matrix Market format and two CSV files with gene and cell metadata
     into an AnnData object.
+    
+    Args:
+        path: Path to the directory containing the matrix.mtx, genes.tsv, and barcodes.tsv files.
+        
+    Returns:
+        An AnnData object with the matrix, gene metadata, and cell metadata.
 
-    Parameters
-    ----------
-    mtx_file : str
-        Path to the Matrix Market file with the sparse matrix.
-    gene_info : str
-        Path to the CSV file with gene metadata.
-    cell_metadata : str
-        Path to the CSV file with cell metadata.
     """
+    mtx_file = os.path.join(path, "matrix.mtx")
+    gene_info = os.path.join(path, "genes.tsv")
+    cell_metadata = os.path.join(path, "barcodes.tsv")
+    
     # Read the .mtx file into a sparse matrix using the fast_matrix_market package (master than scanpy, uses multiprocessing)
     mtx = fast_matrix_market.mmread(mtx_file)
 
@@ -195,13 +198,15 @@ def read_scrnaseq_from_mtx_and_csv(
         mtx = mtx.tocsr()
     
     # Create an AnnData object
-    data = sc.AnnData(X=mtx)
+    adata = sc.AnnData(X=mtx.T)
 
     # Polars is faster than pandas for reading test files
     # Read the gene names and cell names into the AnnData object
-    adata.var = pl.read_csv(gene_info).to_pandas()
+    
+    adata.var = pl.read_csv(gene_info, separator= '\t', has_header=False).to_pandas()
+    
     # Read the cell names and cell metadata into the AnnData object
-    adata.obs = pl.read_csv(cell_metadata).to_panda()
+    adata.obs = pl.read_csv(cell_metadata, separator= '\t', has_header=False).to_pandas()
     return adata
 ```
 

@@ -1,0 +1,9 @@
+fast_matrix_market
+ipykernel
+matplotlib
+pandas
+polars
+pyarrow
+scanpy
+seaborn 
+session_info

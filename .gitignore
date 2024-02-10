@@ -1,2 +1,5 @@
 10038325
 droplet/*
+droplet_annotation.csv
+droplet_metadata.csv
+cache/*
