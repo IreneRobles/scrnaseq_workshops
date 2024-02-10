@@ -1,6 +1,8 @@
 fast_matrix_market
 ipykernel
+jupyter
 matplotlib
+leidenalg
 pandas
 polars
 pyarrow
