@@ -106,6 +106,8 @@ Single-cell &= \begin{bmatrix}
     - Integration with downstream analysis
     - Speed and memory requirements (In general, Python is faster and more memory efficient than R)
 
+> Hint: A good bioinformatician is not restricted by language. You can use R in Python can be done using the `rpy2` package. And Python can be use within R using `reticulate`. 
+
 ## Scale of scRNAseq data
 
 ![Number of cells per study over years    [@svensson2020curated]](number_of_cells.png)
@@ -235,6 +237,8 @@ for folder in folders[0:10]:
 adata
 ```
 
+## Doublets
+
 ## Preprocessing
 
 ### Highest expressing genes
@@ -283,15 +287,28 @@ sc.pp.filter_genes(adata, min_cells=5)
 adata = adata[adata.obs.n_genes_by_counts < 2500, :]
 adata = adata[adata.obs.pct_counts_mt < 5, :]
 ```
-## Normalization
 
-Normalise the data to the same total count per cell
+
+## Normalisation: size normalisation and log transformation
+
+For simplicity, we will use the simplest method: library size normalisation and log transformation, but there are others
+[@risso2018general, @hafemeister2019normalization]. 
+
+Steps:
+
+- Transcript length normalisation: 
+    - Adjusts for differences in transcript length between genes
+    - Divides the counts in each cell by the length of the transcript
+    - Not necessary if you sequence a fixed region of the transcript ( 3' or 5' in 10X, our case)
+- Library size normalisation: 
+    - Adjusts for differences in sequencing depth between cells
+    - Divides the counts in each cell by the total counts in that cell and multiplies by a scale factor (e.g. 10,000)
 ```{python}
 sc.pp.normalize_total(adata, target_sum=1e4)
 ```
-
-Logarithmize the 
->Why? To make the data more normally distributed
+- Log transformation:
+    - Logarithm of the normalised counts
+    - Makes the data more normally distributed
 ```{python}
 sc.pp.log1p(adata)
 ```
