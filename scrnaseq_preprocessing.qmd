@@ -93,8 +93,9 @@ Single-cell &= \begin{bmatrix}
 | Data size           | Lower                               | Higher                           |
 | Data interpretation | Simple                             | Complex                           |
 
-## Scanpy (Python) vs Seurat (R)
-
+## Scanpy vs Seurat
+- Scanpy is a Python package for single-cell analysis [@wolf2018scanpy]
+- Seurat is an R package for single-cell analysis [@satija2015spatial]
 - Both are: 
     - User-friendly tools for single-cell analysis
     - Open source 
@@ -315,6 +316,9 @@ sc.pp.log1p(adata)
 
 ## Highly variable genes
 
+- Genes that show the most variation across cells
+- Often the most informative genes
+
 ```{python}
 sc.pp.highly_variable_genes(adata, min_mean=0.0125, max_mean=3, min_disp=0.5)
 ```
@@ -372,7 +376,7 @@ We suggest embedding the graph in two dimensions using UMAP (McInnes et al., 201
 
 ```{python}
  # remove `plot=False` if you want to see the coarse-grained graph
-sc.tl.umap(adata, init_pos='paga')
+sc.tl.umap(adata)
 sc.tl.umap(adata)
 ```
 
