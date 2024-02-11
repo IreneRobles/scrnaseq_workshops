@@ -93,13 +93,18 @@ Single-cell &= \begin{bmatrix}
 | Data size           | Lower                               | Higher                           |
 | Data interpretation | Simple                             | Complex                           |
 
-## Scanpy vs Seurat
+## Scanpy (Python) vs Seurat (R)
 
-- Scanpy is a Python package for single-cell analysis.
-- Seurat is an R package for single-cell analysis.
-- Both are widely used and have similar functionality.
-- Scanpy is more flexible and has a more active development community.
-- Seurat is more user-friendly and has more tutorials and documentation.
+- Both are: 
+    - User-friendly tools for single-cell analysis
+    - Open source 
+    - Well-documented (Maybe Seurat more than Scanpy)
+    - Widely-used
+- Choice depends on:
+    - Language preference
+    - Team expertise
+    - Integration with downstream analysis
+    - Speed and memory requirements (In general, Python is faster and more memory efficient than R)
 
 ## Scale of scRNAseq data
 
