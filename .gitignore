@@ -3,3 +3,4 @@ droplet/*
 droplet_annotation.csv
 droplet_metadata.csv
 cache/*
+data/*
