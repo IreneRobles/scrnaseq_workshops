@@ -1,5 +1,5 @@
 ---
-title: "Introduction to scRNAseq analysis"
+title: "Introduction to scRNAseq analysis using scanpy"
 subtitle: "Workshop"
 author: Irene Robles
 institute: CoSyne Therapeutics
@@ -19,31 +19,33 @@ fontsize: 12pt
 jupyter: myscanpy
 ---
 
-## Introduction
+## Goal
+
+Introduction to scRNAseq analysis using scanpy
 
 ## Who am I?
 
-## Where do I work?
+- Irene Robles Rebollo
+- BSc in Biochemistry
+- MSc in Applied Biosciences and Biotechnology
+- PhD in Cell Biology
+    - Half experimental
+    - Half computational
+- Bioinformatician at Cosyne Therapeutics
 
-## What do I do?
 
 ## Bulk sequencing data
 
 - 1953 - DNA structure
-- 1953 - First protein amino acid sequencing
-- 1975 - Sanger sequencing
 - 1985 - First PCR
 - 1988 - PCR with Taq polymerase
-- 1988 - Automation of Sanger sequencing
 - 1993 - First qPCRs
-- 1996 - Pyrosequencing
 - 1995 - Microarrays
     - Quantify gene expression using a chip
 - 2001 - First draft of the human genome
 - 2003 - First NGS DNA sequencer
-- 2005 - Next-generation sequencing
+- 2006 - First RNA-seq
 - 2009 - First single-cell RNA-seq [@tang2009mrna]
-- 2010 - RNA-seq
 - 2013 - Single-cell RNA-seq is declared method of the year
 
 [@zhu2020pcr; @gondane2023revealing]
