@@ -34,33 +34,56 @@ Introduction to scRNAseq analysis using scanpy
 - Bioinformatician at Cosyne Therapeutics
 
 
-## Bulk sequencing data
+## History
 
-- 1953 - DNA structure
-- 1985 - First PCR
-- 1988 - PCR with Taq polymerase
-- 1993 - First qPCRs
-- 1995 - Microarrays
-    - Quantify gene expression using a chip
-- 2001 - First draft of the human genome
-- 2003 - First NGS DNA sequencer
-- 2006 - First RNA-seq
-- 2009 - First single-cell RNA-seq [@tang2009mrna]
-- 2013 - Single-cell RNA-seq is declared method of the year
+| Year | Achievement | 
+|------|-------------|
+| 1953 |  DNA structure                   
+| 1985 |  First PCR -  DNA amplification 
+| 1988 |  PCR with Taq polymerase - Automated DNA amplification| 
+| 1993 |  First qPCRs - RNA amplification 
+| 1995 |  Microarrays - Quantify an array gene expression using a chip| 
+| 2001 |  First draft of the human genome
+| 2003 |  First NGS DNA sequencer - High throughput DNA sequencing |
+| 2006 |  First RNA-seq -  High throughput RNA sequencing |
+| 2009 |  First single-cell RNA-seq [@tang2009mrna] 
+| 2013 |  Single-cell RNA-seq is declared method of the year
 
 [@zhu2020pcr; @gondane2023revealing]
 
-## Bulk RNA-seq
 
-- RNA-seq is a method to quantify gene expression in a sample by sequencing the RNA molecules in the sample.
-- Can be used to quantify gene expression, identify alternative splicing, identify novel genes, quantify allele-specific expression, etc.
-- Can estimate the **average expression** level for each gene across a population of cells.
+## Single-cell vs bulk RNAseq
 
-## Single-cell RNA-seq
+:::: {.columns}
 
-- scRNA-seq methods can quantify gene expression in individual cells.
-- Can be used to study cell  heterogeneity, sunch as identify cell types, cell states, heterogeneity, and cell-cell interactions.
-- Suffers from drop-out, higher technical noise and lower genomic resolution compared to bulk RNA-seq.
+::: {.column width="49%"}
+
+![Bulk RNA-seq, <a href="https://unsplash.com/es/@lyfefuel?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">LyfeFuel</a> from <a href="https://unsplash.com/es/fotos/bebida-verde-y-blanca-con-pajita-en-vaso-transparente-_82CV9I-TP8?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>](figures/lyfefuel-_82CV9I-TP8-unsplash.jpg)
+:::
+
+
+  
+::: {.column width="3%"}
+<!-- empty column to create gap -->
+:::
+
+::: {.column width="48%"}
+![scRNA-seq, <a href="https://unsplash.com/es/@vdphotography?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">VD Photography</a> from <a href="https://unsplash.com/es/fotos/un-plato-blanco-cubierto-con-fruta-cortada-sEK8OMsJJ08?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>](figures/vd-photography-sEK8OMsJJ08-unsplash.jpg)
+:::
+
+::::
+
+
+|Feature              | Bulk data                          | Single-cell data                  |
+|-----------------------|------------------------------------|-----------------------------------|
+| Cell resolution       | Average of all cells               | Individual cell resolution        |
+| Sample representation | Vector of gene expression values | Matrix of gene expression values  |
+| Genomic resolution  | Higher, depends on sequencing depth  | Lower, depends on starting material |
+| Cost                | Lower                                | High                              |
+| Computational requirements | Lower                        | Higher                              |
+| Data size           | Lower                               | Higher                           |
+| Data interpretation | Simple                             | Complex                           |
+
 
 ## Sample representation
 
@@ -83,17 +106,6 @@ Single-cell &= \begin{bmatrix}
 \end{align}
 
 
-## Single-cell vs bulk RNAseq
-
-|Feature              | Bulk data                          | Single-cell data                  |
-|---------------------|------------------------------------|-----------------------------------|
-| Cell resolution     | Average of all cells               | Individual cell resolution        |
-| Sample representation | Vector of gene expression values | Matrix of gene expression values  |
-| Genomic resolution  | Higher, depends on sequencing depth  | Lower, depends on starting material |
-| Cost                | Lower                                | High                              |
-| Computational requirements | Lower                        | Higher                              |
-| Data size           | Lower                               | Higher                           |
-| Data interpretation | Simple                             | Complex                           |
 
 ## Scanpy vs Seurat
 - Scanpy is a Python package for single-cell analysis [@wolf2018scanpy]
@@ -101,19 +113,19 @@ Single-cell &= \begin{bmatrix}
 - Both are: 
     - User-friendly tools for single-cell analysis
     - Open source 
-    - Well-documented (Maybe Seurat more than Scanpy)
+    - Well-documented
     - Widely-used
 - Choice depends on:
     - Language preference
     - Team expertise
     - Integration with downstream analysis
-    - Speed and memory requirements (In general, Python is faster and more memory efficient than R)
+    - Speed and memory requirements
 
 > Hint: A good bioinformatician is not restricted by language. You can use R in Python can be done using the `rpy2` package. And Python can be use within R using `reticulate`. 
 
 ## Scale of scRNAseq data
 
-![Number of cells per study over years    [@svensson2020curated]](number_of_cells.png)
+![Number of cells per study over years [@svensson2020curated]](number_of_cells.png)
 
 ## AnnData object
 
@@ -128,7 +140,6 @@ Single-cell &= \begin{bmatrix}
 conda create -n myscanpy python=3.10
 conda activate myscanpy
 pip install -r requirements.txt
-quarto check jupyter
 ```
 
 ## Import libraries
@@ -190,7 +201,7 @@ How do we fight doublets:
 
 Scrublet finds doublets based os simulations [@wolock2019scrublet]
 
-![Scrublet algorithm overview[@wolock2019scrublet]](figures/scrublet.png)
+![Scrublet algorithm overview [@wolock2019scrublet]](figures/scrublet.png)
 
 ```{python}
 scrub = scr.Scrublet(adata.X, expected_doublet_rate=0.06)
@@ -201,8 +212,7 @@ scrub.plot_histogram()
 Adjust threshold
 
 ```{python}
-scrub.call_doublets(threshold=0.2)
-doublet_scores, predicted_doublets = scrub.scrub_doublets()
+predicted_doublets = scrub.call_doublets(threshold=0.2)
 scrub.plot_histogram()
 ```
 
@@ -218,7 +228,6 @@ Filter out doublets
 ```{python}
 adata.obs["scrublet_doublet"] = predicted_doublets
 adata = adata[adata.obs["scrublet_doublet"].apply(lambda x: x is False)]
-
 ```
 
 ## Preprocessing
