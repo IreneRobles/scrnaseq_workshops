@@ -1,4 +1,3 @@
-fast_matrix_market
 ipykernel
 jupyter
 matplotlib
