@@ -125,13 +125,17 @@ Single-cell &= \begin{bmatrix}
 
 ## Scale of scRNAseq data
 
-![Number of cells per study over years [@svensson2020curated]](number_of_cells.png)
+![Number of cells per study over years [@svensson2020curated]](figures/number_of_cells.png)
 
 ## AnnData object
 
 ![AnnData object, source: scanpy web](https://falexwolf.de/img/scanpy/anndata.svg) 
 
-## Set up
+## Set up 
+
+:::{.panel-tabset}
+
+### Conda
 
 - Install Miniconda
 - Create a new environment
@@ -140,7 +144,22 @@ Single-cell &= \begin{bmatrix}
 conda create -n myscanpy python=3.10
 conda activate myscanpy
 pip install -r requirements.txt
+python -m ipykernel install --user --name myscanpy --display-name "Python (myscanpy)"
 ```
+
+### Google Colab
+
+Go to [Google Colab]("https://colab.research.google.com/")
+
+Open a notebook from Github.
+
+![](figures/GoogleColab1.png)
+
+Introduce `https://github.com/IreneRobles/scrnaseq_workshops`
+
+
+
+:::
 
 ## Import libraries
 
