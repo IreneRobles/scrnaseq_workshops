@@ -409,7 +409,7 @@ sc.pl.pca_variance_ratio(adata, log=True)
 First, we need to compute the neighbourhood graph:
 
 ```{python}
-sc.pp.neighbors(adata, n_neighbors=10, n_pcs=40)
+sc.pp.neighbors(adata, n_neighbors=10, n_pcs=20)
 ```
 
 Compute UMAP:
@@ -421,21 +421,27 @@ sc.tl.umap(adata)
 Compute t-SNE:
 
 ```{python}
-sc.tl.tsne(adata)
+sc.tl.tsne(adata, n_pcs = 20)
 ```
 
 Plot UMAP: 
 ```{python}
-sc.pl.umap(adata, color='sample', use_raw=False)
+sc.pl.umap(adata, color='sample')
 ```
 
 Plot t-SNE: 
 ```{python}
-sc.pl.tsne(adata, color='sample', use_raw=False)
+sc.pl.tsne(adata, color='sample')
 ```
 
 ## Clustering the neighborhood graph
-As with Seurat and many other frameworks, we recommend the Leiden graph-clustering method (community detection based on optimizing modularity) by Traag et al. (2018). Note that Leiden clustering directly clusters the neighborhood graph of cells, which we already computed in the previous section.
+
+![Leiden algorithm. The Leiden algorithm starts from a singleton partition (a). The algorithm moves individual nodes
+from one community to another to find a partition (b), which is then refined (c). An aggregate network (d) is created based
+on the refined partition, using the non-refined partition to create an initial partition for the aggregate network. For example,
+the red community in (b) is refined into two subcommunities in (c), which after aggregation become two separate nodes in (d),
+both belonging to the same community. The algorithm then moves individual nodes in the aggregate network (e). In this case,
+refinement does not change the partition (f). These steps are repeated until no further improvements can be made. Figure 3 from [@traag2019louvain]](figures/leidenfig3.png)
 
 ```{python}
 sc.tl.leiden(adata)
