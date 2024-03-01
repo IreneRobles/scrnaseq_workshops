@@ -155,8 +155,9 @@ Open a notebook from Github.
 
 ![](figures/GoogleColab1.png)
 
-Introduce `https://github.com/IreneRobles/scrnaseq_workshops`
+Introduce `https://github.com/IreneRobles/scrnaseq_workshops` and select `workshop_notebook.ipynb`
 
+![](figures/GoogleColab2.png)
 
 
 :::
