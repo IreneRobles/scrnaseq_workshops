@@ -1,0 +1,55 @@
+## Quality metrics
+
+### Highest expressed genes
+Look for suspects: MALAT1, mitochondrial genes, ribosomal genes, componenets of the cytoskeleton, etc.
+
+```{python}
+sc.pl.highest_expr_genes(adata, n_top=20)
+```
+
+### Counts, genes and mitochondrial percent
+
+`sc.pp.calculate_qc_metrics` computes quality control metrics for each cell.
+
+- Number of counts per cell
+- Number of genes per cell
+- Percentage of counts that come from mitochondrial genes
+
+```{python}
+# Mitochondrial genes
+adata.var['mt'] = adata.var_names.str.startswith('mt-')
+sc.pp.calculate_qc_metrics(adata, qc_vars=['mt'], percent_top=None, log1p=False, inplace=True)
+```
+
+```{python}
+sc.pl.violin(adata, ['n_genes_by_counts', 'total_counts', 'pct_counts_mt'],
+             jitter=0.4, multi_panel=True, rotation = 90)
+```
+
+Different sampes might require different thresholds
+
+```{python}
+sc.pl.violin(adata, ['n_genes_by_counts', 'total_counts', 'pct_counts_mt'],
+             jitter=0.4, multi_panel=True, groupby='sample', rotation = 90)
+```
+
+```{python}
+sc.pl.scatter(adata, x='total_counts', y='pct_counts_mt', color='sample')
+sc.pl.scatter(adata, x='total_counts', y='n_genes_by_counts', color='sample')
+```
+
+In this case, cells from different samples are reasonably homogeneous. However, that is not always the cells_per_paper.ipynb
+
+![Example case where different tissues might require different quality control threshols, fraction of Tabula Muris data [@schaum2018single]](figures/violinqc_different_tissues.png)
+
+
+### QC filtering
+
+Filter cells based on quality metrics
+
+```{python}
+sc.pp.filter_cells(adata, min_genes=500)
+sc.pp.filter_genes(adata, min_cells=5)
+adata= adata[adata.obs.n_genes_by_counts < 5000, :]
+adata= adata[adata.obs.pct_counts_mt < 15, :]
+```

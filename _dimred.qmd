@@ -1,0 +1,90 @@
+## Dimensionality reduction
+
+### Goal
+- Reducing the number of input variables or features in a dataset.
+
+### Why 
+
+- Noise Reduction: Focus on the most variance-contributing features, thus enhancing the signal-to-noise ratio.
+- Data Visualization: We can plot in 2 or 3 dimensions
+- Aid clustering and clasification
+- Computational efficiency
+
+
+### Prepare data for dimensionality reduction
+
+The `.raw` attribute freezes the state of the AnnData object for later use. We can recumerate it by calling `.raw.to_adata().`
+
+```{python}
+adata.raw = adata
+```
+
+Filter by highly variable genes
+
+```{python}
+adata= adata[:, adata.var.highly_variable]
+adata
+```
+
+Regress out effects of total counts per cell and the percentage of mitochondrial genes expressed. 
+```{python}
+sc.pp.regress_out(adata, ['total_counts', 'pct_counts_mt'])
+```
+
+Scale each gene to unit variance. Clip values exceeding standard deviation to 10.
+```{python}
+sc.pp.scale(adata, max_value=10)
+```
+
+### Dimensionality reduction techniques
+
+- **Principal Component Analysis (PCA)**: PCA is often the first step in dimensionality reduction for single-cell data. It identifies the principal components that capture the most variance in the data, reducing its dimensionality while preserving its structure as much as possible.
+- **t-Distributed Stochastic Neighbor Embedding (t-SNE)**: Popular dimensionality reduction that foccusses on the preservation on local structures
+- **Uniform Manifold Approximation and Projection (UMAP)**: Popular dimensionality reduction that foccusses on the preservation on global structures
+
+#### Principal component analysis (PCA)
+
+PCA is often the first step in dimensionality reduction for single-cell data. It identifies the principal components that capture the most variance in the data, reducing its dimensionality while preserving its structure as much as possible.
+
+```{python}
+sc.tl.pca(adata, svd_solver='arpack')
+```
+```{python}
+sc.pl.pca(adata, color='sample')
+```
+
+Varinace explained by each component:
+
+```{python}
+sc.pl.pca_variance_ratio(adata, log=True)
+```
+
+#### UMAP and t-SNE
+
+First, we need to compute the neighbourhood graph:
+
+```{python}
+sc.pp.neighbors(adata, n_neighbors=10, n_pcs=20)
+```
+
+Compute UMAP:
+
+```{python}
+sc.tl.umap(adata)
+```
+
+Compute t-SNE:
+
+```{python}
+sc.tl.tsne(adata, n_pcs = 20)
+```
+
+Plot UMAP: 
+```{python}
+sc.pl.umap(adata, color='sample')
+```
+
+Plot t-SNE: 
+```{python}
+sc.pl.tsne(adata, color='sample')
+```

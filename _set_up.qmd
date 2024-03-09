@@ -53,3 +53,36 @@ wget https://ftp.ncbi.nlm.nih.gov/geo/series/GSE190nnn/GSE190622/suppl/GSE190622
 
 :::
 
+### Import libraries
+
+```{python}
+import scanpy as sc
+import scrublet as scr
+import numpy as np
+import os
+import pandas as pd
+import polars as pl
+import matplotlib.pyplot as plt
+import seaborn as sns
+```
+
+Scanpy setttings
+```{python}
+sc.settings.verbosity = 3   # verbosity: errors (0), warnings (1), info (2), hints (3)
+sc.logging.print_header()
+sc.settings.set_figure_params(dpi=80, facecolor='white')
+```
+
+### Load tests datasets
+
+Single-cell SMART-seq data from mouse macrophages [@robles2022cohesin]
+
+```{python}
+mf = pd.read_csv("data/GSE190622_count_matrix_Annotated.csv.gz", index_col=0)
+adata = sc.AnnData(X=mf.T)
+adata.obs["genotype"] = adata.obs_names.to_series().apply(lambda x: x.split("_")[0])
+adata.obs["timepoint"] = adata.obs_names.to_series().apply(lambda x: x.split("_")[1])
+adata.obs["sample"] = adata.obs["genotype"] + "_" + adata.obs["timepoint"]
+adata.var_names_make_unique()
+adata
+```

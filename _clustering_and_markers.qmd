@@ -1,0 +1,33 @@
+## Clustering
+
+![Leiden algorithm. The Leiden algorithm starts from a singleton partition (a). The algorithm moves individual nodes
+from one community to another to find a partition (b), which is then refined (c). An aggregate network (d) is created based
+on the refined partition, using the non-refined partition to create an initial partition for the aggregate network. For example,
+the red community in (b) is refined into two subcommunities in (c), which after aggregation become two separate nodes in (d),
+both belonging to the same community. The algorithm then moves individual nodes in the aggregate network (e). In this case,
+refinement does not change the partition (f). These steps are repeated until no further improvements can be made. Figure 3 from [@traag2019louvain]](figures/leidenfig3.png)
+
+```{python}
+sc.tl.leiden(adata)
+sc.pl.umap(adata, color=['sample','leiden'], use_raw=False)
+```
+
+
+## Marker genes
+
+Genes differentially expressed in each cluster.
+
+```{python}
+sc.tl.rank_genes_groups(adata, 'leiden', method='wilcoxon')
+sc.pl.rank_genes_groups(adata, n_genes=25, sharey=False)
+```
+
+```{python}
+pd.DataFrame(adata.uns['rank_genes_groups']['names']).head(5)
+```
+
+Plot some markers:
+
+```{python}
+sc.pl.umap(adata, color=['leiden', 'Ccl5', 'Mapkapk2', 'Ctsd', 'Sepp1', 'Ccnd1','Tnfsf9','Gm12155','Hmgb2','Hist1h2ap','Ddit3','Tubb5'], use_raw=True)
+```

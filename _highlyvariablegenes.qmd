@@ -1,0 +1,8 @@
+## Highly variable genes
+
+- Genes that show the most variation across cells
+- Often the most informative genes
+
+```{python}
+sc.pp.highly_variable_genes(adata, min_mean=0.0125, max_mean=3, min_disp=0.5)
+```
