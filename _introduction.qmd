@@ -1,0 +1,99 @@
+## Introduction
+
+### Single-cell RNA sequencing (scRNA-seq)
+
+- scRNA-seq is a powerful technology for sequencing individual cells' transcriptomes.
+- Provides high-resolution insights into cell-to-cell variability.
+- Enables study of cellular diversity within tissues.
+- Aids in identification of rare cell types.
+
+#### scRNAseq vs bulk RNAseq
+- **RNA-seq** provides a combined overview of gene expression from all cells, masking individual differences (similar to the combined flavor of a smoothie)
+- **scRNA-seq** provides a detailed profile of each cell's gene expression (like tasting each fruit separately),
+
+:::: {.columns}
+
+::: {.column width="49%"}
+
+![Bulk RNA-seq, <a href="https://unsplash.com/es/@lyfefuel?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">LyfeFuel</a> from <a href="https://unsplash.com/es/fotos/bebida-verde-y-blanca-con-pajita-en-vaso-transparente-_82CV9I-TP8?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>](figures/lyfefuel-_82CV9I-TP8-unsplash.jpg)
+:::
+
+::: {.column width="3%"}
+<!-- empty column to create gap -->
+:::
+
+::: {.column width="48%"}
+![scRNA-seq, <a href="https://unsplash.com/es/@vdphotography?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">VD Photography</a> from <a href="https://unsplash.com/es/fotos/un-plato-blanco-cubierto-con-fruta-cortada-sEK8OMsJJ08?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>](figures/vd-photography-sEK8OMsJJ08-unsplash.jpg)
+:::
+
+::::
+
+### Advantajes and limitations
+
+|Feature              | Bulk data                          | Single-cell data                  |
+|-----------------------|------------------------------------|-----------------------------------|
+| Cell resolution       | Average of all cells               | Individual cell resolution        |
+| Sample representation | Vector of gene expression values | Matrix of gene expression values  |
+| Genomic resolution  | Higher, depends on sequencing depth  | Lower, depends on starting material |
+| Cost                | Lower                                | High                              |
+| Computational requirements | Lower                        | Higher                              |
+| Data size           | Lower                               | Higher                           |
+| Data interpretation | Simple                             | Complex                           |
+
+### Current trends in scRNAseq studies
+
+- Increased scale
+- Increased diversiry
+- Multiomics integration
+- Spatial context
+
+![Number of cells per study over years [@svensson2020curated]](figures/number_of_cells.png)
+
+### Sample representation
+
+- In bulk data, each sample is repressented by a vector, where each value is a gene.
+- In single cell data, each sample is a matrix, where each row is a gene and each column is a cell.
+
+\begin{align}
+Bulk &= \begin{bmatrix} gene_{1} \\ gene_{2} \\ gene_{3}\\ \vdots \\ gene_{n} \end{bmatrix} 
+\\
+\\
+
+Single-cell &= \begin{bmatrix}
+    gene_1, cell_1 & gene_1, cell_2 & gene_1, cell_3 & \dots  & gene_1, cell_m \\
+    gene_2, cell_1 & gene_2, cell_2 & gene_2, cell_3 & \dots  & gene_2, cell_m \\
+    gene_3, cell_1 & gene_3, cell_2 & gene_3, cell_3 & \dots  & gene_3, cell_m \\
+    \vdots & \vdots & \vdots & \ddots & \vdots \\
+    gene_n, cell_1 & gene_n, cell_2 & gene_n, cell_3 & \dots  & gene_n, cell_m
+\end{bmatrix}
+
+\end{align}
+
+### scRNAseq packages: Scanpy vs Seurat
+
+- `scanpy` is a Python package for single-cell analysis [@wolf2018scanpy]
+- `Seurat` is an R package for single-cell analysis [@satija2015spatial]
+- Both are: 
+    - User-friendly tools for single-cell analysis
+    - Open source 
+    - Well-documented
+    - Widely-used
+- Choice depends on:
+    - Language preference
+    - Team expertise
+    - Integration with downstream analysis
+    - Speed and memory requirements
+
+
+> Hint: A good bioinformatician is not restricted by language. You can use R in Python can be done using the `rpy2` package. And Python can be use within R using `reticulate`. 
+
+### Scanpy: the AnnData object
+
+Scanpy's AnnData is a flexible container designed for single-cell gene expression data and annotations. Key features include:
+
+- **Data Matrix**: Holds gene expression values with cells as rows and genes as columns.
+Annotations: Allows adding detailed annotations for both cells and genes.
+- **Multidimensional Annotations**: Supports storing multiple matrices for processed and raw data.
+- **Unstructured Data**: Provides space for additional information like quality metrics or analysis results.
+
+![AnnData object, source: scanpy web](https://falexwolf.de/img/scanpy/anndata.svg) 
