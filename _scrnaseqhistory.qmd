@@ -1,0 +1,18 @@
+#### Standing on the shoulders of giants
+
+Subsets of scientific advances required for the development of scRNAseq.
+
+| Year | Achievement | 
+|------|-------------|
+| 1953 |  DNA structure                   
+| 1985 |  First PCR -  DNA amplification 
+| 1988 |  PCR with Taq polymerase - Automated DNA amplification| 
+| 1993 |  First qPCRs - RNA amplification 
+| 1995 |  Microarrays - Quantify an array gene expression using a chip| 
+| 2001 |  First draft of the human genome
+| 2003 |  First NGS DNA sequencer - High throughput DNA sequencing |
+| 2006 |  First RNA-seq -  High throughput RNA sequencing |
+| 2009 |  First single-cell RNA-seq [@tang2009mrna] 
+| 2013 |  Single-cell RNA-seq is declared method of the year
+
+[@zhu2020pcr; @gondane2023revealing]
