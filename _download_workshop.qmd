@@ -1,0 +1,13 @@
+## Workshop access
+
+**Github:**
+
+`https://github.com/IreneRobles/scrnaseq_workshops/`
+
+**Web link:**
+
+`https://tinyurl.com/robles-introduction-to-scanpy`
+
+**QR code:**
+
+![](figures/robles-introduction-to-scanpy-400.png)

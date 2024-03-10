@@ -5,6 +5,7 @@ author: Irene Robles
 institute: CoSyne Therapeutics
 date: today
 bibliography: bibliograpy.bib
+license: CC BY
 execute:
     warning: false
 format: 
@@ -18,6 +19,9 @@ format:
 fontsize: 12pt
 jupyter: myscanpy
 ---
+
+
+{{< include _download_workshop.qmd >}}
 
 {{< include _introduction.qmd >}}
 
