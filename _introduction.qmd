@@ -28,27 +28,6 @@
 
 ::::
 
-### Advantajes and limitations
-
-|Feature              | Bulk data                          | Single-cell data                  |
-|-----------------------|------------------------------------|-----------------------------------|
-| Cell resolution       | Average of all cells               | Individual cell resolution        |
-| Sample representation | Vector of gene expression values | Matrix of gene expression values  |
-| Genomic resolution  | Higher, depends on sequencing depth  | Lower, depends on starting material |
-| Cost                | Lower                                | High                              |
-| Computational requirements | Lower                        | Higher                              |
-| Data size           | Lower                               | Higher                           |
-| Data interpretation | Simple                             | Complex                           |
-
-### Current trends in scRNAseq studies
-
-- Increased scale
-- Increased diversiry
-- Multiomics integration
-- Spatial context
-
-![Number of cells per study over years [@svensson2020curated]](figures/number_of_cells.png)
-
 ### Sample representation
 
 - In bulk data, each sample is repressented by a vector, where each value is a gene.
@@ -68,6 +47,27 @@ Single-cell &= \begin{bmatrix}
 \end{bmatrix}
 
 \end{align}
+
+### Advantages and limitations
+
+|Feature              | Bulk data                          | Single-cell data                  |
+|-----------------------|------------------------------------|-----------------------------------|
+| Cell resolution       | Average of all cells               | Individual cell resolution        |
+| Sample representation | Vector of gene expression values | Matrix of gene expression values  |
+| Genomic resolution  | Higher, depends on sequencing depth  | Lower, depends on starting material |
+| Cost                | Lower                                | High                              |
+| Computational requirements | Lower                        | Higher                              |
+| Data size           | Lower                               | Higher                           |
+| Data interpretation | Simple                             | Complex                           |
+
+### Current trends in scRNAseq studies
+
+- Increased scale
+- Increased diversiry
+- Multiomics integration
+- Spatial context
+
+![Number of cells per study over years [@svensson2020curated]](figures/number_of_cells.png)
 
 ### scRNAseq packages: Scanpy vs Seurat
 

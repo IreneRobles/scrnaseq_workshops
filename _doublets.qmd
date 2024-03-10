@@ -7,6 +7,7 @@
 ![Doublets, adapted from [@wolock2019scrublet]](figures/doublets_scubletpaper.png)
 
 How do we fight doublets:
+
 - Experiment design
 - Computationally
 
